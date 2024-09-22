@@ -4,6 +4,7 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import axios from 'axios';
 import { add, set } from 'date-fns';
+import { SimpleSnackbar } from './tooltip';
 
 const AddEditLeave = () => {
     const [walker, setWalker] = useState('');
@@ -40,11 +41,11 @@ const AddEditLeave = () => {
         try {
             const response = await axios.post('http://localhost:3001/api/leave/createleave', leaveData);
             if (response.data.statusCode == 201) {
-                setShowToast(!showToast)
+                setShowToast(true)
                 setMessage('Leave created successfully')
             }
             else {
-                setShowToast(!showToast)
+                setShowToast(true)
                 setMessage('Failed to create leave')
             }
             console.log('Leave created:', response.data);
@@ -55,7 +56,6 @@ const AddEditLeave = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = { walker, reason, startDate, endDate, slotType, removePenalty };
-
         addLeave()
     };
     const getPartners = async () => {
@@ -73,12 +73,10 @@ const AddEditLeave = () => {
     }, [])
     return (
         <>
-            {/* <div>
-
-                {
-                    <SimpleSnackbar message={message}
-                    />}
-            </div> */}
+            <div>
+                <SimpleSnackbar message={message} showToast={showToast} setShowToast={setShowToast}
+                />
+            </div>
             <Box
                 component="form"
                 onSubmit={handleSubmit}
